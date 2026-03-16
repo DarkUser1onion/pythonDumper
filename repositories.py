@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from datetime import datetime, timezone
+from models import NoteOut
 
 DB_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(__file__), "data", "notes.db"))
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
@@ -46,3 +47,18 @@ class NoteRepository:
             return NoteOut(**row)
         finally:
             conn.close()
+
+def get(self, note_id: int) -> NoteOut | None:
+    conn = get_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT id, title, body, created_at FROM noted WHERE id = ?",
+            (note_id,)
+        )
+        row = cur.fetchone()
+        if not row:
+            return None
+        return NoteOut(**row)
+    finally:
+        conn.close()
