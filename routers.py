@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from models import NoteCreate
+from models import NoteCreate, NoteOut
 from repositories import NoteRepository
 from services import NoteService
 
@@ -9,7 +9,7 @@ def get_service():
     repo = NoteRepository()
     return NoteService(repo)
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=NoteOut, status_code=status.HTTP_201_CREATED)
 def create_note(payload: NoteCreate, service: NoteService = Depends(get_service)):
     try:
         return service.create_note(payload.title, payload.body)
@@ -19,7 +19,7 @@ def create_note(payload: NoteCreate, service: NoteService = Depends(get_service)
             detail={"error": "Validation", "reason": "title_empty"}
         )
 
-@router.get("/{note_id}")
+@router.get("/{note_id}", response_model=NoteOut)
 def get_note(note_id: int, service: NoteService = Depends(get_service)):
     note = service.get_note(note_id)
     if not note:
