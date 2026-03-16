@@ -53,7 +53,7 @@ def get(self, note_id: int) -> NoteOut | None:
     try:
         cur = conn.cursor()
         cur.execute(
-            "SELECT id, title, body, created_at FROM noted WHERE id = ?",
+            "SELECT id, title, body, created_at FROM notes WHERE id = ?",
             (note_id,)
         )
         row = cur.fetchone()
