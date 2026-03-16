@@ -24,3 +24,25 @@ def init_db():
             """
         )
     conn.close()
+
+class NoteRepository:
+    def create(self, title: str, body: str | None):
+        conn = get_conn()
+        try:
+            cur = conn.cursor()
+            now = datetime.now(timezone.utc).isoformat()
+            cur.execute(
+                "INSERT INTO notes (title, body, created_at) VALUES (?, ?, ?)",
+                (title, body, now)
+            )
+            note_id = cur.lastrowid
+            conn.commit()
+
+            cur.execute(
+                "SELECT id, title, body, created_at FROM notes WHERE id = ?",
+                (note_id,)
+            )
+            row = cur.fetchone()
+            return NoteOut(**row)
+        finally:
+            conn.close()
