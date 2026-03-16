@@ -10,3 +10,6 @@ class NoteService:
         if not title:
             raise ValueError("title empty")
         return self.repo.create(title=title, body=body)
+
+    def get_note(self, note_id: int) -> Optional[NoteOut]:
+        return self.repo.get(note_id)
