@@ -18,16 +18,14 @@ def get_conn():
 def init_db():
     conn = get_conn()
     with conn:
-        conn.execute(
-            """
-            CREATE TABLE IF NOT EXISTS notes (
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS products (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                body TEXT,
-                created_at TEXT NOT NULL
+                name TEXT NOT NULL,
+                price INTEGER NOT NULL,
+                in_stock BOOLEAN NOT NULL DEFAULT 1
             )
-            """
-        )
+        """)
     conn.close()
 
 class NoteRepository:
