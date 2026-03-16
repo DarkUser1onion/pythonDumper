@@ -8,5 +8,5 @@ async def lifespan(app: FastAPI):
     init_db()
     yield
 
-app = FastAPI(title="Practic01", lifespan=lifespan)
+app = FastAPI(title="Api", lifespan=lifespan)
 app.include_router(router)
