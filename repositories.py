@@ -1,10 +1,14 @@
 import os
 import sqlite3
+import logging
 from datetime import datetime, timezone
 from models import NoteOut
 
 DB_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(__file__), "data", "notes.db"))
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def get_conn():
     conn = sqlite3.connect(DB_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
@@ -28,6 +32,7 @@ def init_db():
 
 class NoteRepository:
     def create(self, title: str, body: str | None):
+        logger.info(f"Creating note with title: {title}")
         conn = get_conn()
         try:
             cur = conn.cursor()
@@ -49,6 +54,7 @@ class NoteRepository:
             conn.close()
 
 def get(self, note_id: int) -> NoteOut | None:
+    logger.info(f"Fetching note with id: {note_id}")
     conn = get_conn()
     try:
         cur = conn.cursor()
